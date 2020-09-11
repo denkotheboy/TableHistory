@@ -1,0 +1,12 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.table-container {
+  height: 750px;
+  overflow: auto;
+}
+.table {
+  border-top: 0px;
+}
