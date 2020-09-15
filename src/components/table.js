@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-export default class Table extends Component {
+class Table extends Component {
   constructor(props) {
     super(props);
 
@@ -39,6 +40,7 @@ export default class Table extends Component {
     this.setState({
       scrollPosition: e.target.scrollTop
     });
+    this.props.addTab(this.props.tab, e.target.scrollTop);
   };
 
   componentDidMount() {
@@ -90,3 +92,14 @@ export default class Table extends Component {
     }
   }
 }
+
+export default connect(
+  (state) => ({
+    store: state
+  }),
+  (dispatch) => ({
+    addTab: (tab, scrollPosition) => {
+      dispatch({ type: "addTab", tab: tab, scrollPosition: scrollPosition });
+    }
+  })
+)(Table);

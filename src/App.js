@@ -3,6 +3,12 @@ import "./styles.css";
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/header";
 import Main from "./components/main";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import reduser from "./redusers";
+
+const initialState = {};
+const store = createStore(reduser, initialState);
 
 export default class App extends Component {
   constructor(props) {
@@ -14,12 +20,14 @@ export default class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="App">
-          <div className="container">
-            <Header />
-            <Main />
+        <Provider store={store}>
+          <div className="App">
+            <div className="container">
+              <Header />
+              <Main />
+            </div>
           </div>
-        </div>
+        </Provider>
       </BrowserRouter>
     );
   }
