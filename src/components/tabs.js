@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "./table";
 
-export default class MainMenu extends Component {
+export default class Tabs extends Component {
   constructor(props) {
     super(props);
 
@@ -42,12 +42,12 @@ export default class MainMenu extends Component {
             </div>
           </div>
           <div className="row table-container">
-            {Object.keys(this.props.data).map((tabs) => {
+            {Object.keys(this.props.data).map((tab) => {
               if (
-                this.state.activeTab === tabs ||
-                window.location.pathname === "/" + tabs
+                this.state.activeTab === tab ||
+                window.location.pathname === "/" + tab
               ) {
-                return <Table key={tabs} data={this.props.data} tab={tabs} />;
+                return <Table key={tab} data={this.props.data} tab={tab} />;
               } else {
                 return null;
               }

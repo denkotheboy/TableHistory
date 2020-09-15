@@ -5,9 +5,61 @@ class Table extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      to: 1,
+      from: 0,
+      page: 1,
+      numberOfPages: 1
+    };
+    this.perPage = 20;
     this.scrollRef = React.createRef();
   }
+
+  getTheNumberOfPages = () => {
+    this.setState({
+      numberOfPages: Math.ceil(
+        Object.keys(this.props.data).length / this.perPage
+      )
+    });
+  };
+
+  goToPage = (isNextPage) => {
+    this.getTheNumberOfPages();
+    if (this.state.page < this.state.numberOfPages && isNextPage) {
+      this.props.addTab(
+        this.props.tab,
+        this.props.store[this.props.tab].scrollPosition,
+        this.state.page + 1
+      );
+    } else if (this.state.page > this.state.numberOfPages && !isNextPage) {
+      this.props.addTab(
+        this.props.tab,
+        this.props.store[this.props.tab].scrollPosition,
+        this.state.page - 1
+      );
+    } else if (this.state.page === 0) {
+      this.props.addTab(
+        this.props.tab,
+        this.props.store[this.props.tab].scrollPosition,
+        this.state.numberOfPages
+      );
+    } else if (this.state.page === this.state.numberOfPages) {
+      this.props.addTab(
+        this.props.tab,
+        this.props.store[this.props.tab].scrollPosition,
+        1
+      );
+    }
+    console.log("Page: " + this.state.page);
+    this.expectNewToAndFrom();
+  };
+
+  expectNewToAndFrom = () => {
+    this.setState({
+      to: this.state.page * this.perPage,
+      from: this.state.page * this.perPage - this.perPage
+    });
+  };
 
   sortTabsById = (tab) => {
     var newTabs = [];
@@ -35,10 +87,13 @@ class Table extends Component {
   };
 
   handleScroll = (e) => {
-    this.props.addTab(this.props.tab, e.target.scrollTop);
+    this.props.addTab(this.props.tab, e.target.scrollTop, this.state.page);
   };
 
   componentDidMount() {
+    //this.props.addTab(this.props.tab, 0);
+
+    this.expectNewToAndFrom();
     try {
       this.scrollRef.current.scrollTop = this.props.store[
         this.props.tab
@@ -69,7 +124,7 @@ class Table extends Component {
               </thead>
               <tbody>
                 {Object.keys(this.props.data[this.props.tab]).map((line, id) =>
-                  id > 0 && id < 5 ? (
+                  id < this.state.to && id >= this.state.from ? (
                     <tr key={id}>
                       {this.sortFieldById(
                         this.props.data[this.props.tab][line]
@@ -95,8 +150,12 @@ export default connect(
     store: state
   }),
   (dispatch) => ({
-    addTab: (tab, scrollPosition) => {
-      dispatch({ type: "addTab", tab: tab, scrollPosition: scrollPosition });
+    addTab: (tab, scrollPosition, page) => {
+      dispatch({
+        type: "addTab",
+        tab: tab,
+        scrollPosition: scrollPosition
+      });
     }
   })
 )(Table);
