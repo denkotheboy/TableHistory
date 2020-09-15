@@ -1,5 +1,4 @@
 export default (state, action) => {
-  console.log(state);
   if (action.type === "addTab") {
     return {
       ...state,

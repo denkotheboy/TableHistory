@@ -5,9 +5,7 @@ class Table extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      scrollPosition: 0
-    };
+    this.state = {};
     this.scrollRef = React.createRef();
   }
 
@@ -37,15 +35,14 @@ class Table extends Component {
   };
 
   handleScroll = (e) => {
-    this.setState({
-      scrollPosition: e.target.scrollTop
-    });
     this.props.addTab(this.props.tab, e.target.scrollTop);
   };
 
   componentDidMount() {
     try {
-      this.scrollRef.current.scrollTop = this.state.scrollPosition;
+      this.scrollRef.current.scrollTop = this.props.store[
+        this.props.tab
+      ].scrollPosition;
     } catch (error) {}
   }
 
