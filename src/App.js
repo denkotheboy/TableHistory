@@ -22,7 +22,7 @@ export default class App extends Component {
       <BrowserRouter>
         <Provider store={store}>
           <div className="App">
-            <div className="container">
+            <div className="container-fluid">
               <Header />
               <Main />
             </div>

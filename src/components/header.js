@@ -21,7 +21,7 @@ export default class Head extends Component {
       <>
         <header>
           <div className="row mt-3 justify-content-between">
-            <div className="col-sm-4">
+            <div className="col-2">
               <form onSubmit={this.onSubmit}>
                 <input
                   type="text"
@@ -33,7 +33,7 @@ export default class Head extends Component {
                 />
               </form>
             </div>
-            <div className="col-sm-2">
+            <div className="col-2">
               <span>Count: </span>
               <span>0</span>
             </div>

@@ -56,12 +56,12 @@ class Table extends Component {
             onScroll={this.handleScroll}
           >
             <table className="table">
-              <thead className="thead-dark" ref={this.ref}>
-                <tr>
+              <thead className="thead-dark header" ref={this.ref}>
+                <tr className="header">
                   {this.sortTabsById(
                     Object.keys(this.props.data[this.props.tab][0])
                   ).map((field, index) => (
-                    <th key={index} scope="col">
+                    <th key={index} scope="col" className="header">
                       {field}
                     </th>
                   ))}

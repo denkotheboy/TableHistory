@@ -10,3 +10,8 @@
 .table {
   border-top: 0px;
 }
+
+.header {
+  position: sticky;
+  top: 0;
+}
