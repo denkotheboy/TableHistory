@@ -68,8 +68,8 @@ class Table extends Component {
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(this.props.data[this.props.tab]).map(
-                  (line, id) => (
+                {Object.keys(this.props.data[this.props.tab]).map((line, id) =>
+                  id > 0 && id < 5 ? (
                     <tr key={id}>
                       {this.sortFieldById(
                         this.props.data[this.props.tab][line]
@@ -77,7 +77,7 @@ class Table extends Component {
                         <td key={index}>{value}</td>
                       ))}
                     </tr>
-                  )
+                  ) : null
                 )}
               </tbody>
             </table>

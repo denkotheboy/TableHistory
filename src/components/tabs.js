@@ -49,7 +49,7 @@ export default class MainMenu extends Component {
               ) {
                 return <Table key={tabs} data={this.props.data} tab={tabs} />;
               } else {
-                return <div key={tabs}></div>;
+                return null;
               }
             })}
           </div>
