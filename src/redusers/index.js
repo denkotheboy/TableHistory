@@ -1,11 +1,12 @@
 export default (state, action) => {
-  console.log(state, action);
-  if (action.type === "editTab") {
-    return { ...state, auth: action.auth };
-  } else if (action.type === "addTab") {
+  console.log(state);
+  if (action.type === "addTab") {
     return {
       ...state,
-      images: { [action.src]: { className: action.className } }
+      [action.tab]: {
+        tab: action.tab,
+        scrollPosition: action.scrollPosition
+      }
     };
   }
   return state;
