@@ -21,13 +21,15 @@ export default class App extends Component {
   }
 
   initialStore = () => {
-    console.log(this.state.data);
-    this.store = createStore(reduser, {});
+    let addTabs = {};
+    for (let item of Object.keys(this.state.data)) {
+      addTabs[item] = { tab: item, scrollPosition: 0, page: 1 };
+    }
+    this.store = createStore(reduser, addTabs);
   };
 
   componentDidMount() {
     if (!this.state.isLoaded) {
-      console.log(1);
       fetch("https://run.mocky.io/v3/9be86d12-964c-4dec-8e05-cdc1b9fd332b")
         .then((res) => res.json())
         .then(
@@ -36,7 +38,6 @@ export default class App extends Component {
               isLoaded: true,
               data: result.data
             });
-            //this.sort(result.data);
           },
           (error) => {
             this.setState({
@@ -64,7 +65,13 @@ export default class App extends Component {
         </BrowserRouter>
       );
     } else {
-      return <>loading...</>;
+      return (
+        <div className="container-fluid">
+          <div className="row mt-5">
+            <div className="col">loading...</div>
+          </div>
+        </div>
+      );
     }
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { animateScroll as scroll } from "react-scroll";
 
 class Table extends Component {
   constructor(props) {
@@ -7,61 +8,57 @@ class Table extends Component {
 
     this.state = {
       to: 1,
-      from: 0,
-      page: 1,
-      numberOfPages: 1
+      from: 0
     };
     this.perPage = 20;
+    this.numberOfPages = 1;
     this.scrollRef = React.createRef();
   }
 
   getTheNumberOfPages = () => {
-    this.setState({
-      numberOfPages: Math.ceil(
-        Object.keys(this.props.data).length / this.perPage
-      )
-    });
+    console.log(Object.keys(this.props.data[this.props.tab]).length);
+    this.numberOfPages = Math.ceil(
+      Object.keys(this.props.data[this.props.tab]).length / this.perPage
+    );
   };
 
-  goToPage = (isNextPage) => {
+  nextPage = () => {
     this.getTheNumberOfPages();
-    if (this.state.page < this.state.numberOfPages && isNextPage) {
+    console.log(this.props.store[this.props.tab].page);
+    if (this.props.store[this.props.tab].page < this.numberOfPages) {
       this.props.addTab(
         this.props.tab,
-        this.props.store[this.props.tab].scrollPosition,
-        this.state.page + 1
+        this.scrollRef.current.scrollTop,
+        this.props.store[this.props.tab].page + 1
       );
-    } else if (this.state.page > this.state.numberOfPages && !isNextPage) {
+      console.log("Page: " + this.props.store[this.props.tab].page);
+    }
+    this.expectNewToAndFrom();
+  };
+
+  previousPage = () => {
+    this.getTheNumberOfPages();
+    console.log(this.numberOfPages);
+    console.log(this.props.store[this.props.tab].page);
+    if (this.props.store[this.props.tab].page > 0) {
       this.props.addTab(
         this.props.tab,
-        this.props.store[this.props.tab].scrollPosition,
-        this.state.page - 1
-      );
-    } else if (this.state.page === 0) {
-      this.props.addTab(
-        this.props.tab,
-        this.props.store[this.props.tab].scrollPosition,
-        this.state.numberOfPages
-      );
-    } else if (this.state.page === this.state.numberOfPages) {
-      this.props.addTab(
-        this.props.tab,
-        this.props.store[this.props.tab].scrollPosition,
-        1
+        this.scrollRef.current.scrollTop,
+        this.props.store[this.props.tab].page - 1
       );
     }
-    console.log("Page: " + this.state.page);
+    console.log("Page: " + this.props.store[this.props.tab].page);
     this.expectNewToAndFrom();
   };
 
   expectNewToAndFrom = () => {
     this.setState({
-      to: this.state.page * this.perPage,
-      from: this.state.page * this.perPage - this.perPage
+      to: this.props.store[this.props.tab].page * this.perPage,
+      from: this.props.store[this.props.tab].page * this.perPage - this.perPage
     });
   };
 
-  sortTabsById = (tab) => {
+  sortColumnsById = (tab) => {
     var newTabs = [];
     if (tab)
       for (var item of tab) {
@@ -87,55 +84,41 @@ class Table extends Component {
   };
 
   componentDidMount() {
-    // try {
-    //   if (
-    //     this.props.store[this.props.tab] !== null ||
-    //     this.props.store[this.props.tab] !== undefined
-    //   ) {
-    //     console.log(this.props.store[this.props.tab].page);
-    //     this.setState({
-    //       page: this.props.store[this.props.tab].page
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    try {
-      this.scrollRef.current.scrollTop = this.props.store[
-        this.props.tab
-      ].scrollPosition;
-      console.log(this.props.store[this.props.tab].scrollPosition);
-      console.log(this.scrollRef.current.scrollTop);
-    } catch (error) {
-      //console.log(error);
-    }
+    scroll.scrollMore(this.props.store[this.props.tab].scrollPosition, {
+      duration: 0,
+      smooth: "linear",
+      containerId: "scroll-container"
+    });
     this.expectNewToAndFrom();
   }
+
   componentWillUnmount() {
     try {
       this.props.addTab(
         this.props.tab,
         this.scrollRef.current.scrollTop,
-        this.state.page
+        this.props.store[this.props.tab].page
       );
-      console.log(this.scrollRef.current.scrollTop);
     } catch (e) {}
   }
+
+  test = (e) => {
+    console.log("Click");
+  };
 
   render() {
     if (this.props.data[this.props.tab].length > 0) {
       return (
         <>
           <div
+            id="scroll-container"
             ref={this.scrollRef}
             className="col pl-0 table-container"
-            onScroll={this.handleScroll}
           >
             <table className="table">
               <thead className="thead-dark header" ref={this.ref}>
                 <tr className="header">
-                  {this.sortTabsById(
+                  {this.sortColumnsById(
                     Object.keys(this.props.data[this.props.tab][0])
                   ).map((field, index) => (
                     <th key={index} scope="col" className="header">
@@ -158,6 +141,23 @@ class Table extends Component {
                 )}
               </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+              <ul className="pagination justify-content-center">
+                <li className="page-item">
+                  <span className="page-link" onClick={this.previousPage}>
+                    Previous
+                  </span>
+                </li>
+                <li className="page-item">
+                  <span className="page-link">1</span>
+                </li>
+                <li className="page-item">
+                  <span className="page-link" onClick={this.nextPage}>
+                    Next
+                  </span>
+                </li>
+              </ul>
+            </nav>
           </div>
         </>
       );
