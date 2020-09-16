@@ -86,19 +86,41 @@ class Table extends Component {
     return newFields;
   };
 
-  handleScroll = (e) => {
-    this.props.addTab(this.props.tab, e.target.scrollTop, this.state.page);
-  };
-
   componentDidMount() {
-    //this.props.addTab(this.props.tab, 0);
+    // try {
+    //   if (
+    //     this.props.store[this.props.tab] !== null ||
+    //     this.props.store[this.props.tab] !== undefined
+    //   ) {
+    //     console.log(this.props.store[this.props.tab].page);
+    //     this.setState({
+    //       page: this.props.store[this.props.tab].page
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
-    this.expectNewToAndFrom();
     try {
       this.scrollRef.current.scrollTop = this.props.store[
         this.props.tab
       ].scrollPosition;
-    } catch (error) {}
+      console.log(this.props.store[this.props.tab].scrollPosition);
+      console.log(this.scrollRef.current.scrollTop);
+    } catch (error) {
+      //console.log(error);
+    }
+    this.expectNewToAndFrom();
+  }
+  componentWillUnmount() {
+    try {
+      this.props.addTab(
+        this.props.tab,
+        this.scrollRef.current.scrollTop,
+        this.state.page
+      );
+      console.log(this.scrollRef.current.scrollTop);
+    } catch (e) {}
   }
 
   render() {
@@ -154,7 +176,8 @@ export default connect(
       dispatch({
         type: "addTab",
         tab: tab,
-        scrollPosition: scrollPosition
+        scrollPosition: scrollPosition,
+        page: page
       });
     }
   })

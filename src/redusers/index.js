@@ -4,7 +4,8 @@ export default (state, action) => {
       ...state,
       [action.tab]: {
         tab: action.tab,
-        scrollPosition: action.scrollPosition
+        scrollPosition: action.scrollPosition,
+        page: action.page
       }
     };
   }
