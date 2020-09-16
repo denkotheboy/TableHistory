@@ -8,7 +8,8 @@ class Table extends Component {
 
     this.state = {
       to: 1,
-      from: 0
+      from: 0,
+      style: null
     };
     this.perPage = 20;
     this.page = 1;
@@ -83,6 +84,12 @@ class Table extends Component {
     });
     this.page = this.props.store[this.props.tab].page;
     this.expectNewToAndFrom();
+    this.setState({
+      style: {
+        height:
+          window.innerHeight - this.scrollRef.current.getBoundingClientRect()
+      }
+    });
   }
 
   shouldComponentUpdate() {
@@ -92,13 +99,6 @@ class Table extends Component {
     }
     return true;
   }
-
-  optimizeTheTableForTheScreenSize = () => {
-    console.log(
-      document.getElementById("scroll-container").getBoundingClientRect().x
-    );
-    return { height: window.innerHeight };
-  };
 
   componentWillUnmount() {
     try {
@@ -112,14 +112,13 @@ class Table extends Component {
 
   render() {
     if (this.props.data[this.props.tab].length > 0) {
-      console.log(this.optimizeTheTableForTheScreenSize());
       return (
         <>
           <div
             id="scroll-container"
             ref={this.scrollRef}
             className="col pl-0 table-container"
-            style={this.optimizeTheTableForTheScreenSize()}
+            style={this.state.style}
           >
             <table className="table">
               <thead className="thead-dark header" ref={this.ref}>
