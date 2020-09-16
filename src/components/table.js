@@ -84,12 +84,15 @@ class Table extends Component {
     });
     this.page = this.props.store[this.props.tab].page;
     this.expectNewToAndFrom();
-    this.setState({
-      style: {
-        height:
-          window.innerHeight - this.scrollRef.current.getBoundingClientRect()
-      }
-    });
+    if (this.props.data[this.props.tab].length > 0) {
+      this.setState({
+        style: {
+          height:
+            window.innerHeight -
+            this.scrollRef.current.getBoundingClientRect().y
+        }
+      });
+    }
   }
 
   shouldComponentUpdate() {
