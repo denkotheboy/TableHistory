@@ -11,12 +11,13 @@ class Table extends Component {
       from: 0
     };
     this.perPage = 20;
+    this.page = 1;
+    this.needToUpdate = true;
     this.numberOfPages = 1;
     this.scrollRef = React.createRef();
   }
 
   getTheNumberOfPages = () => {
-    console.log(Object.keys(this.props.data[this.props.tab]).length);
     this.numberOfPages = Math.ceil(
       Object.keys(this.props.data[this.props.tab]).length / this.perPage
     );
@@ -24,37 +25,28 @@ class Table extends Component {
 
   nextPage = () => {
     this.getTheNumberOfPages();
-    console.log(this.props.store[this.props.tab].page);
-    if (this.props.store[this.props.tab].page < this.numberOfPages) {
-      this.props.addTab(
-        this.props.tab,
-        this.scrollRef.current.scrollTop,
-        this.props.store[this.props.tab].page + 1
-      );
-      console.log("Page: " + this.props.store[this.props.tab].page);
+    if (this.page < this.numberOfPages) {
+      this.page = this.page + 1;
+      this.needToUpdate = true;
+      console.log("Page: " + this.page);
     }
     this.expectNewToAndFrom();
   };
 
   previousPage = () => {
     this.getTheNumberOfPages();
-    console.log(this.numberOfPages);
-    console.log(this.props.store[this.props.tab].page);
-    if (this.props.store[this.props.tab].page > 0) {
-      this.props.addTab(
-        this.props.tab,
-        this.scrollRef.current.scrollTop,
-        this.props.store[this.props.tab].page - 1
-      );
+    if (this.page > 1) {
+      this.page = this.page - 1;
+      this.needToUpdate = true;
+      console.log("Page: " + this.page);
+      this.expectNewToAndFrom();
     }
-    console.log("Page: " + this.props.store[this.props.tab].page);
-    this.expectNewToAndFrom();
   };
 
   expectNewToAndFrom = () => {
     this.setState({
-      to: this.props.store[this.props.tab].page * this.perPage,
-      from: this.props.store[this.props.tab].page * this.perPage - this.perPage
+      to: this.page * this.perPage,
+      from: this.page * this.perPage - this.perPage
     });
   };
 
@@ -89,7 +81,16 @@ class Table extends Component {
       smooth: "linear",
       containerId: "scroll-container"
     });
+    this.page = this.props.store[this.props.tab].page;
     this.expectNewToAndFrom();
+  }
+
+  shouldComponentUpdate() {
+    if (this.needToUpdate) {
+      this.expectNewToAndFrom();
+      this.needToUpdate = false;
+    }
+    return true;
   }
 
   componentWillUnmount() {
@@ -97,14 +98,10 @@ class Table extends Component {
       this.props.addTab(
         this.props.tab,
         this.scrollRef.current.scrollTop,
-        this.props.store[this.props.tab].page
+        this.page
       );
     } catch (e) {}
   }
-
-  test = (e) => {
-    console.log("Click");
-  };
 
   render() {
     if (this.props.data[this.props.tab].length > 0) {
