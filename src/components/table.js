@@ -44,6 +44,16 @@ class Table extends Component {
     }
   };
 
+  goToPage = (number) => {
+    this.getTheNumberOfPages();
+    if (number >= 0 && number <= this.numberOfPages) {
+      this.page = number;
+      this.needToUpdate = true;
+      console.log("Page: " + number);
+      this.expectNewToAndFrom();
+    }
+  };
+
   expectNewToAndFrom = () => {
     this.setState({
       to: this.page * this.perPage,
@@ -74,6 +84,25 @@ class Table extends Component {
       }
     });
     return newFields;
+  };
+
+  creatingAndDrawingNumbering = () => {
+    this.getTheNumberOfPages();
+    let content = [];
+    let skip = 10;
+    for (let i = 1; i <= this.numberOfPages; i++) {
+      content.push(
+        <li
+          className={this.page === i ? "page-item active" : "page-item"}
+          key={i}
+        >
+          <span onClick={() => this.goToPage(i)} className="page-link ">
+            {i}
+          </span>
+        </li>
+      );
+    }
+    return content;
   };
 
   componentDidMount() {
@@ -123,7 +152,7 @@ class Table extends Component {
             className="col pl-0 table-container"
             style={this.state.style}
           >
-            <table className="table">
+            <table className="table ml-2">
               <thead className="thead-dark header" ref={this.ref}>
                 <tr className="header">
                   {this.sortColumnsById(
@@ -150,18 +179,49 @@ class Table extends Component {
               </tbody>
             </table>
             <nav aria-label="Page navigation example">
-              <ul className="pagination justify-content-center">
-                <li className="page-item">
-                  <span className="page-link" onClick={this.previousPage}>
-                    Previous
+              <ul className="pagination pagination-sm justify-content-center">
+                <li
+                  className={
+                    this.page === 1 ? "page-item disabled" : "page-item"
+                  }
+                >
+                  <span className="page-link" onClick={() => this.goToPage(1)}>
+                    Первая
                   </span>
                 </li>
-                <li className="page-item">
-                  <span className="page-link">1</span>
+                <li
+                  className={
+                    this.page === 1 ? "page-item disabled" : "page-item"
+                  }
+                >
+                  <span className="page-link" onClick={this.previousPage}>
+                    Предыдущая
+                  </span>
                 </li>
-                <li className="page-item">
+                {this.creatingAndDrawingNumbering()}
+                <li
+                  className={
+                    this.page === this.numberOfPages
+                      ? "page-item disabled"
+                      : "page-item"
+                  }
+                >
                   <span className="page-link" onClick={this.nextPage}>
-                    Next
+                    Следующая
+                  </span>
+                </li>
+                <li
+                  className={
+                    this.page === this.numberOfPages
+                      ? "page-item disabled"
+                      : "page-item"
+                  }
+                >
+                  <span
+                    className="page-link"
+                    onClick={() => this.goToPage(this.numberOfPages)}
+                  >
+                    Последняя
                   </span>
                 </li>
               </ul>
