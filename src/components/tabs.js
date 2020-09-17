@@ -23,7 +23,6 @@ class Tabs extends Component {
                   <li key={tab} className="nav-item">
                     <Link
                       onClick={() => {
-                        this.props.changeActiveTab(tab);
                         this.setState({
                           activeTab: tab
                         });

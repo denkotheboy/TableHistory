@@ -9,6 +9,9 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reduser from "./redusers";
 
+const initialState = { activeTab: null };
+const store = createStore(reduser, initialState);
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -19,24 +22,31 @@ export default class App extends Component {
       data: null,
       activeTab: null
     };
+    this.isLoading = false;
 
-    this.store = null;
+    this.store = store.subscribe(this.changeActiveTab);
   }
 
   initialStore = () => {
-    let addTabs = { activeTab: this.state.activeTab };
-    for (let item of Object.keys(this.state.data)) {
-      addTabs[item] = { tab: item, scrollPosition: 0, page: 1 };
+    if (!this.isLoading) {
+      for (let item of Object.keys(this.state.data)) {
+        store.dispatch({
+          type: "addTab",
+          tab: item,
+          scrollPosition: 0,
+          page: 1
+        });
+      }
+      this.isLoading = true;
     }
-    this.store = createStore(reduser, addTabs);
-    this.subscibeStore = this.store.subscribe(this.changeActiveTab);
   };
 
   changeActiveTab = () => {
-    console.log(this.store.getState().activeTab);
-    this.setState({
-      activeTab: this.store.getState().activeTab
-    });
+    if (this.isLoading) {
+      this.setState({
+        activeTab: store.getState().activeTab
+      });
+    }
   };
 
   componentDidMount() {
@@ -65,7 +75,7 @@ export default class App extends Component {
       this.initialStore();
       return (
         <BrowserRouter>
-          <Provider store={this.store}>
+          <Provider store={store}>
             <div className="App">
               <div className="container-fluid">
                 <header>

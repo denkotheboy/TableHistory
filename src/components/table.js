@@ -106,6 +106,7 @@ class Table extends Component {
   };
 
   componentDidMount() {
+    this.props.changeActiveTab(this.props.tab);
     scroll.scrollMore(this.props.store[this.props.tab].scrollPosition, {
       duration: 0,
       smooth: "linear",
@@ -246,6 +247,12 @@ export default connect(
         tab: tab,
         scrollPosition: scrollPosition,
         page: page
+      });
+    },
+    changeActiveTab: (activeTab) => {
+      dispatch({
+        type: "changeActiveTab",
+        activeTab: activeTab
       });
     }
   })

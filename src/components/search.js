@@ -6,15 +6,29 @@ export default class Search extends Component {
     this.state = {};
   }
 
+  renderSelect = (activeTab) => {
+    let content = [];
+
+    if (activeTab) {
+      if (Object.keys(this.props.data[this.props.activeTab]).length !== 0) {
+        for (let item of Object.keys(
+          this.props.data[this.props.activeTab][0]
+        )) {
+          content.push(<option key={item}>{item}</option>);
+        }
+      } else {
+        return <option>-</option>;
+      }
+    }
+    return content;
+  };
+
   render() {
     return (
       <>
         <form onSubmit={this.onSubmit} className="form-inline mt-2">
           <select className="form-control form-control-sm">
-            <option>Small select</option>
-            {/* {Object.keys(this.props.data).map((item, index) => 
-              <option>Small select</option>
-            )} */}
+            {this.renderSelect(this.props.activeTab)}
           </select>
           <input
             type="text"
