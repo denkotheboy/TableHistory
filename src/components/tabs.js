@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import Table from "./table";
 
-export default class Tabs extends Component {
+class Tabs extends Component {
   constructor(props) {
     super(props);
 
@@ -15,13 +16,14 @@ export default class Tabs extends Component {
     if (this.props.data !== null) {
       return (
         <>
-          <div className="row mt-5">
+          <div className="row mt-2">
             <div className="col">
               <ul className="nav nav-tabs">
                 {Object.keys(this.props.data).map((tab) => (
                   <li key={tab} className="nav-item">
                     <Link
                       onClick={() => {
+                        this.props.changeActiveTab(tab);
                         this.setState({
                           activeTab: tab
                         });
@@ -64,3 +66,16 @@ export default class Tabs extends Component {
     }
   }
 }
+export default connect(
+  (state) => ({
+    store: state
+  }),
+  (dispatch) => ({
+    changeActiveTab: (activeTab) => {
+      dispatch({
+        type: "changeActiveTab",
+        activeTab: activeTab
+      });
+    }
+  })
+)(Tabs);

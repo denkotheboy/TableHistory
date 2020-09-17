@@ -8,6 +8,8 @@ export default (state, action) => {
         page: action.page
       }
     };
+  } else if (action.type === "changeActiveTab") {
+    return { ...state, activeTab: action.activeTab };
   }
   return state;
 };

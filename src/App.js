@@ -3,6 +3,8 @@ import "./styles.css";
 import { BrowserRouter } from "react-router-dom";
 import Barcode from "./components/barcode";
 import Tabs from "./components/tabs";
+import Count from "./components/count";
+import Search from "./components/search";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reduser from "./redusers";
@@ -14,18 +16,27 @@ export default class App extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      data: null
+      data: null,
+      activeTab: null
     };
 
     this.store = null;
   }
 
   initialStore = () => {
-    let addTabs = {};
+    let addTabs = { activeTab: this.state.activeTab };
     for (let item of Object.keys(this.state.data)) {
       addTabs[item] = { tab: item, scrollPosition: 0, page: 1 };
     }
     this.store = createStore(reduser, addTabs);
+    this.subscibeStore = this.store.subscribe(this.changeActiveTab);
+  };
+
+  changeActiveTab = () => {
+    console.log(this.store.getState().activeTab);
+    this.setState({
+      activeTab: this.store.getState().activeTab
+    });
   };
 
   componentDidMount() {
@@ -57,8 +68,27 @@ export default class App extends Component {
           <Provider store={this.store}>
             <div className="App">
               <div className="container-fluid">
-                <Barcode />
-                <Tabs data={this.state.data} />
+                <header>
+                  <div className="row mt-2 justify-content-between">
+                    <div className="col-2">
+                      <Barcode />
+                    </div>
+                    <div className="col-2">
+                      <Count />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-6">
+                      <Search
+                        data={this.state.data}
+                        activeTab={this.state.activeTab}
+                      />
+                    </div>
+                  </div>
+                </header>
+                <main>
+                  <Tabs data={this.state.data} />
+                </main>
               </div>
             </div>
           </Provider>
