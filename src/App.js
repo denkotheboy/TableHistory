@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./styles.css";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/header";
+import Barcode from "./components/barcode";
 import Tabs from "./components/tabs";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
@@ -57,7 +57,7 @@ export default class App extends Component {
           <Provider store={this.store}>
             <div className="App">
               <div className="container-fluid">
-                <Header />
+                <Barcode />
                 <Tabs data={this.state.data} />
               </div>
             </div>
