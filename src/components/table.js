@@ -222,7 +222,7 @@ class Table extends Component {
                     className="page-link"
                     onClick={() => this.goToPage(this.numberOfPages)}
                   >
-                    Последняя
+                    Последняя ({this.numberOfPages})
                   </span>
                 </li>
               </ul>

@@ -6,13 +6,25 @@ export default class Search extends Component {
     this.state = {};
   }
 
+  sortColumnsById = (tab) => {
+    var newTabs = [];
+    if (tab)
+      for (var item of tab) {
+        if (item === "id") {
+          newTabs.unshift(item);
+        } else {
+          newTabs.push(item);
+        }
+      }
+    return newTabs;
+  };
+
   renderSelect = (activeTab) => {
     let content = [];
-
     if (activeTab) {
       if (Object.keys(this.props.data[this.props.activeTab]).length !== 0) {
-        for (let item of Object.keys(
-          this.props.data[this.props.activeTab][0]
+        for (let item of this.sortColumnsById(
+          Object.keys(this.props.data[this.props.activeTab][0])
         )) {
           content.push(<option key={item}>{item}</option>);
         }
