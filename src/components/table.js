@@ -144,6 +144,61 @@ class Table extends Component {
     } catch (e) {}
   }
 
+  search = () => {
+    if (this.props.search !== null) {
+      Object.values(this.props.data[this.props.tab]).map((item, index) => {
+        if (
+          index ===
+            Object.keys(this.props.data[this.props.tab][index]).indexOf(
+              this.props.search.select
+            ) &&
+          item[this.props.search.select] === this.props.search.value
+        ) {
+          return index;
+        } else {
+          return -1;
+        }
+      });
+    } else {
+      return -1;
+    }
+  };
+
+  drawingColumns = () => {
+    let content = [];
+
+    this.sortColumnsById(Object.keys(this.props.data[this.props.tab][0])).map(
+      (field, index) => {
+        content.push(
+          <th key={index} scope="col" className="header">
+            {field}
+          </th>
+        );
+      }
+    );
+    return content;
+  };
+
+  drawingFields = () => {
+    let content = [];
+    Object.keys(this.props.data[this.props.tab]).map((line, id) => {
+      if (id < this.state.to && id >= this.state.from) {
+        content.push(
+          <tr key={id}>
+            {this.sortFieldById(this.props.data[this.props.tab][line]).map(
+              (value, index) => (
+                <td key={index}>{value}</td>
+              )
+            )}
+          </tr>
+        );
+      } else {
+        content.push(null);
+      }
+    });
+    return content;
+  };
+
   render() {
     if (this.props.data[this.props.tab].length > 0) {
       return (
@@ -156,29 +211,9 @@ class Table extends Component {
           >
             <table className="table ml-2">
               <thead className="thead-dark header" ref={this.ref}>
-                <tr className="header">
-                  {this.sortColumnsById(
-                    Object.keys(this.props.data[this.props.tab][0])
-                  ).map((field, index) => (
-                    <th key={index} scope="col" className="header">
-                      {field}
-                    </th>
-                  ))}
-                </tr>
+                <tr className="header">{this.drawingColumns()}</tr>
               </thead>
-              <tbody>
-                {Object.keys(this.props.data[this.props.tab]).map((line, id) =>
-                  id < this.state.to && id >= this.state.from ? (
-                    <tr key={id}>
-                      {this.sortFieldById(
-                        this.props.data[this.props.tab][line]
-                      ).map((value, index) => (
-                        <td key={index}>{value}</td>
-                      ))}
-                    </tr>
-                  ) : null
-                )}
-              </tbody>
+              <tbody>{this.drawingFields()}</tbody>
             </table>
             <nav aria-label="Page navigation example">
               <ul className="pagination pagination-sm justify-content-center">
