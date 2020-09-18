@@ -145,23 +145,23 @@ class Table extends Component {
   }
 
   search = () => {
+    console.log(this.props.search);
     if (this.props.search !== null) {
       Object.values(this.props.data[this.props.tab]).map((item, index) => {
         if (
-          index ===
-            Object.keys(this.props.data[this.props.tab][index]).indexOf(
-              this.props.search.select
-            ) &&
-          item[this.props.search.select] === this.props.search.value
+          Number(item[this.props.search.select]) ===
+          Number(this.props.search.input)
         ) {
+          console.log(1);
           return index;
-        } else {
-          return -1;
         }
       });
     } else {
+      console.log(2);
       return -1;
     }
+    console.log(3);
+    return -2;
   };
 
   drawingColumns = () => {
@@ -181,6 +181,7 @@ class Table extends Component {
 
   drawingFields = () => {
     let content = [];
+    this.search();
     Object.keys(this.props.data[this.props.tab]).map((line, id) => {
       if (id < this.state.to && id >= this.state.from) {
         content.push(
@@ -196,6 +197,7 @@ class Table extends Component {
         content.push(null);
       }
     });
+
     return content;
   };
 

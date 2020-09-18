@@ -11,7 +11,10 @@ export default (state, action) => {
   } else if (action.type === "changeActiveTab") {
     return { ...state, activeTab: action.activeTab };
   } else if (action.type === "search") {
-    return { ...state, search: { select: action.select, input: action.input } };
+    return {
+      ...state,
+      search: { select: action.search.select, input: action.search.input }
+    };
   }
   return state;
 };

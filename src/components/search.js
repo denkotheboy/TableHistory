@@ -22,8 +22,8 @@ class Search extends Component {
       msgError: false
     });
   };
+
   onChangeSelect = (event) => {
-    console.log(event.target.value);
     this.setState({
       select: event.target.value
     });
