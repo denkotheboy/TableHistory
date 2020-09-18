@@ -48,7 +48,14 @@ class Tabs extends Component {
                 this.state.activeTab === tab ||
                 window.location.pathname === "/" + tab
               ) {
-                return <Table key={tab} data={this.props.data} tab={tab} />;
+                return (
+                  <Table
+                    search={this.props.search}
+                    key={tab}
+                    data={this.props.data}
+                    tab={tab}
+                  />
+                );
               } else {
                 return null;
               }

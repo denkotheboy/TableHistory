@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reduser from "./redusers";
 
-const initialState = { activeTab: null };
+const initialState = { activeTab: null, search: null };
 const store = createStore(reduser, initialState);
 
 export default class App extends Component {
@@ -20,11 +20,12 @@ export default class App extends Component {
       error: null,
       isLoaded: false,
       data: null,
-      activeTab: null
+      activeTab: null,
+      search: null
     };
     this.isLoading = false;
 
-    this.store = store.subscribe(this.changeActiveTab);
+    this.store = store.subscribe(this.storeChange);
   }
 
   initialStore = () => {
@@ -41,11 +42,19 @@ export default class App extends Component {
     }
   };
 
-  changeActiveTab = () => {
+  storeChange = () => {
     if (this.isLoading) {
       this.setState({
         activeTab: store.getState().activeTab
       });
+      if (store.getState().search !== null) {
+        this.setState({
+          search: {
+            select: store.getState().search.select,
+            input: store.getState().search.input
+          }
+        });
+      }
     }
   };
 
@@ -88,7 +97,7 @@ export default class App extends Component {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-6">
+                    <div className="col-5">
                       <Search
                         data={this.state.data}
                         activeTab={this.state.activeTab}
@@ -97,7 +106,7 @@ export default class App extends Component {
                   </div>
                 </header>
                 <main>
-                  <Tabs data={this.state.data} />
+                  <Tabs data={this.state.data} search={this.state.search} />
                 </main>
               </div>
             </div>

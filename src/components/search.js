@@ -1,10 +1,33 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-export default class Search extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { select: "id", input: "" };
   }
+
+  onSubmit = (event) => {
+    event.preventDefault();
+    if (this.state.input === "") {
+      this.props.search(null);
+    } else {
+      this.props.search({ select: this.state.select, input: this.state.input });
+    }
+  };
+
+  onChangeInput = (event) => {
+    this.setState({
+      input: event.target.value,
+      msgError: false
+    });
+  };
+  onChangeSelect = (event) => {
+    console.log(event.target.value);
+    this.setState({
+      select: event.target.value
+    });
+  };
 
   sortColumnsById = (tab) => {
     var newTabs = [];
@@ -26,7 +49,11 @@ export default class Search extends Component {
         for (let item of this.sortColumnsById(
           Object.keys(this.props.data[this.props.activeTab][0])
         )) {
-          content.push(<option key={item}>{item}</option>);
+          content.push(
+            <option value={item} key={item}>
+              {item}
+            </option>
+          );
         }
       } else {
         return <option>-</option>;
@@ -39,7 +66,11 @@ export default class Search extends Component {
     return (
       <>
         <form onSubmit={this.onSubmit} className="form-inline mt-2">
-          <select className="form-control form-control-sm">
+          <select
+            className="form-control form-control-sm"
+            onChange={this.onChangeSelect}
+            value={this.state.select}
+          >
             {this.renderSelect(this.props.activeTab)}
           </select>
           <input
@@ -48,7 +79,7 @@ export default class Search extends Component {
             placeholder="Search"
             aria-label="Search"
             aria-describedby="basic-addon1"
-            onChange={this.onChange}
+            onChange={this.onChangeInput}
           />
           <button type="submit" className="btn-sm btn-outline-dark ml-2">
             Search
@@ -58,3 +89,16 @@ export default class Search extends Component {
     );
   }
 }
+export default connect(
+  (state) => ({
+    store: state
+  }),
+  (dispatch) => ({
+    search: (search) => {
+      dispatch({
+        type: "search",
+        search: search
+      });
+    }
+  })
+)(Search);

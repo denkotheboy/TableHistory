@@ -119,7 +119,8 @@ class Table extends Component {
         style: {
           height:
             window.innerHeight -
-            this.scrollRef.current.getBoundingClientRect().y
+            this.scrollRef.current.getBoundingClientRect().y -
+            4
         }
       });
     }
