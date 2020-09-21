@@ -7,65 +7,17 @@ class Table extends Component {
     super(props);
 
     this.state = {
-      to: 1,
-      from: 0,
       style: null
     };
-    this.perPage = 20;
-    this.page = 1;
-    this.needToUpdate = true;
-    this.numberOfPages = 1;
+    this.to = 1;
+    this.form = 0;
     this.scrollRef = React.createRef();
     this.listOfFoundEntries = [];
   }
 
-  getTheNumberOfPages = () => {
-    if (this.listOfFoundEntries.length !== 0) {
-      this.numberOfPages = Math.ceil(
-        this.listOfFoundEntries.length / this.perPage
-      );
-    } else {
-      this.numberOfPages = Math.ceil(
-        Object.keys(this.props.data[this.props.tab]).length / this.perPage
-      );
-    }
-  };
-
-  nextPage = () => {
-    this.getTheNumberOfPages();
-    if (this.page < this.numberOfPages) {
-      this.page = this.page + 1;
-      this.needToUpdate = true;
-      console.log("Page: " + this.page);
-    }
-    this.expectNewToAndFrom();
-  };
-
-  previousPage = () => {
-    this.getTheNumberOfPages();
-    if (this.page > 1) {
-      this.page = this.page - 1;
-      this.needToUpdate = true;
-      console.log("Page: " + this.page);
-      this.expectNewToAndFrom();
-    }
-  };
-
-  goToPage = (number) => {
-    this.getTheNumberOfPages();
-    if (number >= 0 && number <= this.numberOfPages) {
-      this.page = number;
-      this.needToUpdate = true;
-      console.log("Page: " + number);
-      this.expectNewToAndFrom();
-    }
-  };
-
   expectNewToAndFrom = () => {
-    this.setState({
-      to: this.page * this.perPage,
-      from: this.page * this.perPage - this.perPage
-    });
+    this.to = this.props.page * this.props.perPage;
+    this.from = this.props.page * this.props.perPage - this.props.perPage;
   };
 
   sortColumnsById = (tab) => {
@@ -93,25 +45,6 @@ class Table extends Component {
     return newFields;
   };
 
-  creatingAndDrawingNumbering = () => {
-    this.getTheNumberOfPages();
-    let content = [];
-    let skip = 10;
-    for (let i = 1; i <= this.numberOfPages; i++) {
-      content.push(
-        <li
-          className={this.page === i ? "page-item active" : "page-item"}
-          key={i}
-        >
-          <span onClick={() => this.goToPage(i)} className="page-link ">
-            {i}
-          </span>
-        </li>
-      );
-    }
-    return content;
-  };
-
   componentDidMount() {
     this.props.changeActiveTab(this.props.tab);
     scroll.scrollMore(this.props.store[this.props.tab].scrollPosition, {
@@ -119,26 +52,17 @@ class Table extends Component {
       smooth: "linear",
       containerId: "scroll-container"
     });
-    this.page = this.props.store[this.props.tab].page;
-    this.expectNewToAndFrom();
     if (this.props.data[this.props.tab].length > 0) {
       this.setState({
         style: {
           height:
             window.innerHeight -
             this.scrollRef.current.getBoundingClientRect().y -
-            4
+            4 -
+            document.getElementById("page-switching-menu").clientHeight
         }
       });
     }
-  }
-
-  shouldComponentUpdate() {
-    if (this.needToUpdate) {
-      this.expectNewToAndFrom();
-      this.needToUpdate = false;
-    }
-    return true;
   }
 
   componentWillUnmount() {
@@ -146,7 +70,7 @@ class Table extends Component {
       this.props.addTab(
         this.props.tab,
         this.scrollRef.current.scrollTop,
-        this.page
+        this.props.page
       );
     } catch (e) {}
   }
@@ -198,7 +122,7 @@ class Table extends Component {
     this.search();
     Object.keys(this.props.data[this.props.tab]).forEach((line, id) => {
       if (this.listOfFoundEntries.length === 0) {
-        if (id < this.state.to && id >= this.state.from) {
+        if (id < this.to && id >= this.from) {
           content.push(
             <tr key={id}>
               {this.sortFieldById(this.props.data[this.props.tab][line]).map(
@@ -234,6 +158,7 @@ class Table extends Component {
   };
 
   render() {
+    this.expectNewToAndFrom();
     if (this.props.data[this.props.tab].length > 0) {
       return (
         <>
@@ -249,54 +174,6 @@ class Table extends Component {
               </thead>
               <tbody>{this.drawingFields()}</tbody>
             </table>
-            <nav aria-label="Page navigation example">
-              <ul className="pagination pagination-sm justify-content-center">
-                <li
-                  className={
-                    this.page === 1 ? "page-item disabled" : "page-item"
-                  }
-                >
-                  <span className="page-link" onClick={() => this.goToPage(1)}>
-                    Первая
-                  </span>
-                </li>
-                <li
-                  className={
-                    this.page === 1 ? "page-item disabled" : "page-item"
-                  }
-                >
-                  <span className="page-link" onClick={this.previousPage}>
-                    Предыдущая
-                  </span>
-                </li>
-                {this.creatingAndDrawingNumbering()}
-                <li
-                  className={
-                    this.page === this.numberOfPages
-                      ? "page-item disabled"
-                      : "page-item"
-                  }
-                >
-                  <span className="page-link" onClick={this.nextPage}>
-                    Следующая
-                  </span>
-                </li>
-                <li
-                  className={
-                    this.page === this.numberOfPages
-                      ? "page-item disabled"
-                      : "page-item"
-                  }
-                >
-                  <span
-                    className="page-link"
-                    onClick={() => this.goToPage(this.numberOfPages)}
-                  >
-                    Последняя ({this.numberOfPages})
-                  </span>
-                </li>
-              </ul>
-            </nav>
           </div>
         </>
       );
