@@ -10,6 +10,8 @@ export default (state, action) => {
     };
   } else if (action.type === "changeActiveTab") {
     return { ...state, activeTab: action.activeTab };
+  } else if (action.type === "barcode") {
+    return { ...state, barcode: action.barcode };
   } else if (action.type === "search") {
     return {
       ...state,

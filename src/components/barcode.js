@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-export default class Head extends Component {
+class Barcode extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +15,7 @@ export default class Head extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    this.props.sendBarcode(this.state.barcode);
   };
 
   render() {
@@ -33,3 +35,16 @@ export default class Head extends Component {
     );
   }
 }
+export default connect(
+  (state) => ({
+    store: state
+  }),
+  (dispatch) => ({
+    sendBarcode: (barcode) => {
+      dispatch({
+        type: "barcode",
+        barcode: barcode
+      });
+    }
+  })
+)(Barcode);

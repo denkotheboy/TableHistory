@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reduser from "./redusers";
 
-const initialState = { activeTab: null, search: {} };
+const initialState = { activeTab: null, barcode: null, search: {} };
 const store = createStore(reduser, initialState);
 
 export default class App extends Component {
@@ -24,12 +24,13 @@ export default class App extends Component {
       search: {}
     };
     this.isLoading = false;
+    this.barcode = null;
 
     this.store = store.subscribe(this.storeChange);
   }
 
   initialStore = () => {
-    if (!this.isLoading) {
+    if (!this.isLoading && this.state.data !== null) {
       for (let item of Object.keys(this.state.data)) {
         store.dispatch({
           type: "addTab",
@@ -43,24 +44,27 @@ export default class App extends Component {
   };
 
   storeChange = () => {
-    if (this.isLoading) {
+    this.setState({
+      activeTab: store.getState().activeTab
+    });
+    if (store.getState().search !== {}) {
       this.setState({
-        activeTab: store.getState().activeTab
+        search: {
+          select: store.getState().search.select,
+          input: store.getState().search.input
+        }
       });
-      if (store.getState().search !== {}) {
-        this.setState({
-          search: {
-            select: store.getState().search.select,
-            input: store.getState().search.input
-          }
-        });
-      }
+    }
+    if (this.barcode === null || this.barcode !== store.getState().barcode) {
+      this.barcode = store.getState().barcode;
+
+      this.loadHistory();
     }
   };
 
-  componentDidMount() {
+  loadHistory() {
     if (!this.state.isLoaded) {
-      fetch("https://run.mocky.io/v3/9be86d12-964c-4dec-8e05-cdc1b9fd332b")
+      fetch("https://run.mocky.io/v3/449bce4b-eb34-4d89-bfd6-9dd0a1e60459")
         .then((res) => res.json())
         .then(
           (result) => {
@@ -79,48 +83,40 @@ export default class App extends Component {
     }
   }
 
+  componentDidMount() {}
+
   render() {
-    if (this.state.data !== null) {
-      this.initialStore();
-      return (
-        <BrowserRouter>
-          <Provider store={store}>
-            <div className="App">
-              <div className="container-fluid">
-                <header>
-                  <div className="row mt-2 justify-content-between">
-                    <div className="col-2">
-                      <Barcode />
-                    </div>
-                    <div className="col-2">
-                      <Count />
-                    </div>
+    this.initialStore();
+    return (
+      <BrowserRouter>
+        <Provider store={store}>
+          <div className="App">
+            <div className="container-fluid">
+              <header>
+                <div className="row mt-2 justify-content-between">
+                  <div className="col-2">
+                    <Barcode />
                   </div>
-                  <div className="row">
-                    <div className="col-5">
-                      <Search
-                        data={this.state.data}
-                        activeTab={this.state.activeTab}
-                      />
-                    </div>
+                  <div className="col-2">
+                    <Count />
                   </div>
-                </header>
-                <main>
-                  <Tabs data={this.state.data} search={this.state.search} />
-                </main>
-              </div>
+                </div>
+                <div className="row">
+                  <div className="col-5">
+                    <Search
+                      data={this.state.data}
+                      activeTab={this.state.activeTab}
+                    />
+                  </div>
+                </div>
+              </header>
+              <main>
+                <Tabs data={this.state.data} search={this.state.search} />
+              </main>
             </div>
-          </Provider>
-        </BrowserRouter>
-      );
-    } else {
-      return (
-        <div className="container-fluid">
-          <div className="row mt-5">
-            <div className="col">loading...</div>
           </div>
-        </div>
-      );
-    }
+        </Provider>
+      </BrowserRouter>
+    );
   }
 }

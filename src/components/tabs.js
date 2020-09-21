@@ -119,7 +119,7 @@ class Tabs extends Component {
             ) {
               return (
                 <>
-                  <div className="row table-container" key={tab}>
+                  <div className="row table-container" key={tab + "- table"}>
                     <Table
                       search={this.props.search}
                       key={tab}
@@ -133,7 +133,10 @@ class Tabs extends Component {
                       perPage={this.perPage}
                     />
                   </div>
-                  <div className="row justify-content-center">
+                  <div
+                    className="row justify-content-center"
+                    key={tab + "-pagination"}
+                  >
                     {this.props.data[tab].length > 0 ? (
                       <nav
                         aria-label="Page navigation"
@@ -215,7 +218,7 @@ class Tabs extends Component {
     } else {
       return (
         <div className="row mt-5">
-          <div className="col">loading...</div>
+          <div className="col">Данные отсутствуют.</div>
         </div>
       );
     }
