@@ -16,12 +16,19 @@ class Table extends Component {
     this.needToUpdate = true;
     this.numberOfPages = 1;
     this.scrollRef = React.createRef();
+    this.listOfFoundEntries = [];
   }
 
   getTheNumberOfPages = () => {
-    this.numberOfPages = Math.ceil(
-      Object.keys(this.props.data[this.props.tab]).length / this.perPage
-    );
+    if (this.listOfFoundEntries.length !== 0) {
+      this.numberOfPages = Math.ceil(
+        this.listOfFoundEntries.length / this.perPage
+      );
+    } else {
+      this.numberOfPages = Math.ceil(
+        Object.keys(this.props.data[this.props.tab]).length / this.perPage
+      );
+    }
   };
 
   nextPage = () => {
@@ -87,7 +94,6 @@ class Table extends Component {
   };
 
   creatingAndDrawingNumbering = () => {
-    this.getTheNumberOfPages();
     let content = [];
     let skip = 10;
     for (let i = 1; i <= this.numberOfPages; i++) {
@@ -145,56 +151,81 @@ class Table extends Component {
   }
 
   search = () => {
-    console.log(this.props.search);
-    if (this.props.search !== null) {
-      Object.values(this.props.data[this.props.tab]).map((item, index) => {
-        if (
-          Number(item[this.props.search.select]) ===
-          Number(this.props.search.input)
-        ) {
-          console.log(1);
-          return index;
+    this.listOfFoundEntries = [];
+    if (
+      Object.keys(this.props.search).length !== 0 &&
+      this.props.search.input !== undefined
+    ) {
+      for (let [i, value] of Object.values(
+        this.props.data[this.props.tab]
+      ).entries()) {
+        if (this.props.search.select === "id") {
+          if (
+            String(value[this.props.search.select]) === this.props.search.input
+          ) {
+            this.listOfFoundEntries.push(i);
+          }
+        } else {
+          if (
+            String(value[this.props.search.select]).search(
+              this.props.search.input
+            ) !== -1
+          ) {
+            this.listOfFoundEntries.push(i);
+          }
         }
-      });
-    } else {
-      console.log(2);
-      return -1;
+      }
     }
-    console.log(3);
-    return -2;
   };
 
   drawingColumns = () => {
     let content = [];
-
-    this.sortColumnsById(Object.keys(this.props.data[this.props.tab][0])).map(
-      (field, index) => {
-        content.push(
-          <th key={index} scope="col" className="header">
-            {field}
-          </th>
-        );
-      }
-    );
+    this.sortColumnsById(
+      Object.keys(this.props.data[this.props.tab][0])
+    ).forEach((field, index) => {
+      content.push(
+        <th key={index} scope="col" className="header">
+          {field}
+        </th>
+      );
+    });
     return content;
   };
 
   drawingFields = () => {
     let content = [];
     this.search();
-    Object.keys(this.props.data[this.props.tab]).map((line, id) => {
-      if (id < this.state.to && id >= this.state.from) {
-        content.push(
-          <tr key={id}>
-            {this.sortFieldById(this.props.data[this.props.tab][line]).map(
-              (value, index) => (
-                <td key={index}>{value}</td>
-              )
-            )}
-          </tr>
-        );
+    Object.keys(this.props.data[this.props.tab]).forEach((line, id) => {
+      if (this.listOfFoundEntries.length === 0) {
+        if (id < this.state.to && id >= this.state.from) {
+          content.push(
+            <tr key={id}>
+              {this.sortFieldById(this.props.data[this.props.tab][line]).map(
+                (value, index) => (
+                  <td key={index}>{value}</td>
+                )
+              )}
+            </tr>
+          );
+        } else {
+          content.push(null);
+        }
       } else {
-        content.push(null);
+        this.listOfFoundEntries.forEach((item) => {
+          if (Number(id) === Number(item)) {
+            content.push(
+              <tr key={id}>
+                {this.sortFieldById(this.props.data[this.props.tab][line]).map(
+                  (value, index) => (
+                    <td key={index}>{value}</td>
+                  )
+                )}
+              </tr>
+            );
+          } else {
+            content.push(null);
+          }
+        });
       }
     });
 

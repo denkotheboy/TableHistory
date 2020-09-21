@@ -10,7 +10,7 @@ class Search extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     if (this.state.input === "") {
-      this.props.search(null);
+      this.props.search({});
     } else {
       this.props.search({ select: this.state.select, input: this.state.input });
     }

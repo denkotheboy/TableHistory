@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reduser from "./redusers";
 
-const initialState = { activeTab: null, search: null };
+const initialState = { activeTab: null, search: {} };
 const store = createStore(reduser, initialState);
 
 export default class App extends Component {
@@ -21,7 +21,7 @@ export default class App extends Component {
       isLoaded: false,
       data: null,
       activeTab: null,
-      search: null
+      search: {}
     };
     this.isLoading = false;
 
@@ -47,7 +47,7 @@ export default class App extends Component {
       this.setState({
         activeTab: store.getState().activeTab
       });
-      if (store.getState().search !== null) {
+      if (store.getState().search !== {}) {
         this.setState({
           search: {
             select: store.getState().search.select,
