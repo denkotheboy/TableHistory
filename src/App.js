@@ -18,20 +18,20 @@ export default class App extends Component {
 
     this.state = {
       error: null,
-      isLoaded: false,
-      data: null,
+      isLoading: false,
       activeTab: null,
       search: {}
     };
-    this.isLoading = false;
     this.barcode = null;
+    this.isLoaded = false;
+    this.data = null;
 
     this.store = store.subscribe(this.storeChange);
   }
 
   initialStore = () => {
-    if (!this.isLoading && this.state.data !== null) {
-      for (let item of Object.keys(this.state.data)) {
+    if (!this.state.isLoading && this.data !== null) {
+      for (let item of Object.keys(this.data)) {
         store.dispatch({
           type: "addTab",
           tab: item,
@@ -39,11 +39,15 @@ export default class App extends Component {
           page: 1
         });
       }
-      this.isLoading = true;
+      //this.setState({ isLoading: true });
     }
   };
 
   storeChange = () => {
+    if (this.barcode === null || this.barcode !== store.getState().barcode) {
+      this.barcode = store.getState().barcode;
+      this.loadHistory();
+    }
     this.setState({
       activeTab: store.getState().activeTab
     });
@@ -55,38 +59,27 @@ export default class App extends Component {
         }
       });
     }
-    if (this.barcode === null || this.barcode !== store.getState().barcode) {
-      this.barcode = store.getState().barcode;
-
-      this.loadHistory();
-    }
   };
 
   loadHistory() {
-    if (!this.state.isLoaded) {
+    if (!this.isLoaded) {
       fetch("https://run.mocky.io/v3/449bce4b-eb34-4d89-bfd6-9dd0a1e60459")
         .then((res) => res.json())
         .then(
           (result) => {
-            this.setState({
-              isLoaded: true,
-              data: result.data
-            });
+            this.data = result.data;
+            this.isLoaded = true;
+            this.initialStore();
           },
           (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            });
+            this.isLoaded = true;
+            console.log(error);
           }
         );
     }
   }
 
-  componentDidMount() {}
-
   render() {
-    this.initialStore();
     return (
       <BrowserRouter>
         <Provider store={store}>
@@ -98,20 +91,24 @@ export default class App extends Component {
                     <Barcode />
                   </div>
                   <div className="col-2">
-                    <Count />
+                    {this.data !== null ? <Count /> : null}
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-5">
-                    <Search
-                      data={this.state.data}
-                      activeTab={this.state.activeTab}
-                    />
+                    {this.data !== null ? (
+                      <Search
+                        data={this.data}
+                        activeTab={this.state.activeTab}
+                      />
+                    ) : null}
                   </div>
                 </div>
               </header>
               <main>
-                <Tabs data={this.state.data} search={this.state.search} />
+                {this.data !== null ? (
+                  <Tabs data={this.data} search={this.state.search} />
+                ) : null}
               </main>
             </div>
           </div>
