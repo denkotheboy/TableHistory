@@ -94,6 +94,7 @@ class Table extends Component {
   };
 
   creatingAndDrawingNumbering = () => {
+    this.getTheNumberOfPages();
     let content = [];
     let skip = 10;
     for (let i = 1; i <= this.numberOfPages; i++) {
