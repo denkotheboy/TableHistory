@@ -42,7 +42,6 @@ export default class App extends Component {
           page: 1
         });
       }
-      //this.setState({ isLoading: true });
     }
   };
 
