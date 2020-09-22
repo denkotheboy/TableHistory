@@ -30,7 +30,7 @@ class Tabs extends Component {
 
   previousPage = (tab) => {
     this.getTheNumberOfPages(tab);
-    if (this.state.page > this.numberOfPages) {
+    if (this.state.page > 0) {
       this.setState({
         page: this.state.page - 1
       });
@@ -93,7 +93,8 @@ class Tabs extends Component {
                     <Link
                       onClick={() => {
                         this.setState({
-                          activeTab: tab
+                          activeTab: tab,
+                          page: this.props.store[tab].page
                         });
                       }}
                       className={
@@ -125,11 +126,7 @@ class Tabs extends Component {
                       key={tab}
                       data={this.props.data}
                       tab={tab}
-                      page={
-                        this.props.store[tab].page !== 1
-                          ? this.props.store[tab].page
-                          : this.state.page
-                      }
+                      page={this.state.page}
                       perPage={this.perPage}
                     />
                   </div>
