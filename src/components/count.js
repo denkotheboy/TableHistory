@@ -10,7 +10,7 @@ export default class Count extends Component {
     return (
       <>
         <span>Count: </span>
-        <span>0</span>
+        <span>{this.props.count}</span>
       </>
     );
   }

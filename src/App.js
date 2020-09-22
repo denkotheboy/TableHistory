@@ -20,11 +20,14 @@ export default class App extends Component {
       error: null,
       isLoading: false,
       activeTab: null,
+      count: 0,
       search: {}
     };
     this.barcode = null;
-    this.isLoaded = false;
     this.data = null;
+
+    this.loadHistoryInterval = null;
+    this.loadCountInterval = null;
 
     this.store = store.subscribe(this.storeChange);
   }
@@ -47,6 +50,13 @@ export default class App extends Component {
     if (this.barcode === null || this.barcode !== store.getState().barcode) {
       this.barcode = store.getState().barcode;
       this.loadHistory();
+      this.loadHistoryInterval = setInterval(() => {
+        this.loadHistory();
+      }, 15000);
+      this.loadCount();
+      this.loadCountInterval = setInterval(() => {
+        this.loadCount();
+      }, 15000);
     }
     this.setState({
       activeTab: store.getState().activeTab
@@ -61,22 +71,38 @@ export default class App extends Component {
     }
   };
 
+  loadCount() {
+    fetch("https://run.mocky.io/v3/dbc19a1a-179c-45ad-9015-c7f11ceb0f5d")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setState({ count: result.count });
+        },
+        (error) => {
+          this.countIsLoaded = true;
+          console.log(error);
+        }
+      );
+  }
+
   loadHistory() {
-    if (!this.isLoaded) {
-      fetch("https://run.mocky.io/v3/449bce4b-eb34-4d89-bfd6-9dd0a1e60459")
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            this.data = result.data;
-            this.isLoaded = true;
-            this.initialStore();
-          },
-          (error) => {
-            this.isLoaded = true;
-            console.log(error);
-          }
-        );
-    }
+    fetch("https://run.mocky.io/v3/449bce4b-eb34-4d89-bfd6-9dd0a1e60459")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.data = result.data;
+
+          this.initialStore();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.loadCountInterval);
+    clearInterval(this.loadHistoryInterval);
   }
 
   render() {
@@ -91,7 +117,9 @@ export default class App extends Component {
                     <Barcode />
                   </div>
                   <div className="col-2">
-                    {this.data !== null ? <Count /> : null}
+                    {this.data !== null ? (
+                      <Count count={this.state.count} />
+                    ) : null}
                   </div>
                 </div>
                 <div className="row">
