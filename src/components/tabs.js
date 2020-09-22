@@ -119,8 +119,8 @@ class Tabs extends Component {
               window.location.pathname === "/" + tab
             ) {
               return (
-                <>
-                  <div className="row table-container" key={tab + "- table"}>
+                <div key={tab}>
+                  <div className="row table-container">
                     <Table
                       search={this.props.search}
                       key={tab}
@@ -130,10 +130,7 @@ class Tabs extends Component {
                       perPage={this.perPage}
                     />
                   </div>
-                  <div
-                    className="row justify-content-center"
-                    key={tab + "-pagination"}
-                  >
+                  <div className="row justify-content-center">
                     {this.props.data[tab].length > 0 ? (
                       <nav
                         aria-label="Page navigation"
@@ -204,7 +201,7 @@ class Tabs extends Component {
                       </nav>
                     ) : null}
                   </div>
-                </>
+                </div>
               );
             } else {
               return null;

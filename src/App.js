@@ -28,8 +28,6 @@ export default class App extends Component {
 
     this.loadHistoryInterval = null;
     this.loadCountInterval = null;
-
-    this.store = store.subscribe(this.storeChange);
   }
 
   initialStore = () => {
@@ -102,6 +100,9 @@ export default class App extends Component {
   componentWillUnmount() {
     clearInterval(this.loadCountInterval);
     clearInterval(this.loadHistoryInterval);
+  }
+  componentDidMount() {
+    this.store = store.subscribe(this.storeChange);
   }
 
   render() {
