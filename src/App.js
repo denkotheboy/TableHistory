@@ -48,9 +48,9 @@ export default class App extends Component {
   storeChange = () => {
     if (this.barcode === null || this.barcode !== store.getState().barcode) {
       this.barcode = store.getState().barcode;
-      this.loadHistory();
+      this.loadHistory(this.barcode);
       this.loadHistoryInterval = setInterval(() => {
-        this.loadHistory();
+        this.loadHistory(this.barcode);
       }, 15000);
       this.loadCount();
       this.loadCountInterval = setInterval(() => {
@@ -70,7 +70,7 @@ export default class App extends Component {
     }
   };
 
-  loadCount() {
+  loadCount(barcode) {
     fetch("https://run.mocky.io/v3/dbc19a1a-179c-45ad-9015-c7f11ceb0f5d")
       .then((res) => res.json())
       .then(
