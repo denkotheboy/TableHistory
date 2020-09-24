@@ -56,10 +56,7 @@ class Table extends Component {
       this.setState({
         style: {
           height:
-            window.innerHeight -
-            this.scrollRef.current.getBoundingClientRect().y -
-            4 -
-            document.getElementById("page-switching-menu").clientHeight
+            window.innerHeight - this.scrollRef.current.getBoundingClientRect().y - 4 - document.getElementById("page-switching-menu").clientHeight
         }
       });
     }
@@ -168,7 +165,7 @@ class Table extends Component {
             className="col pl-0 table-container"
             style={this.state.style}
           >
-            <table className="table ml-2">
+            <table className="table ml-2 table-bordered">
               <thead className="thead-dark header" ref={this.ref}>
                 <tr className="header">{this.drawingColumns()}</tr>
               </thead>

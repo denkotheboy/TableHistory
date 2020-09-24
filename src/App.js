@@ -76,19 +76,17 @@ export default class App extends Component {
           this.setState({ count: result.count });
         },
         (error) => {
-          this.countIsLoaded = true;
           console.log(error);
         }
       );
   }
 
-  loadHistory() {
-    fetch("https://run.mocky.io/v3/449bce4b-eb34-4d89-bfd6-9dd0a1e60459")
+  loadHistory(barcode) {
+    fetch("https://run.mocky.io/v3/706fa843-7094-4091-b991-268bb8a245a9")
       .then((res) => res.json())
       .then(
         (result) => {
           this.data = result.data;
-
           this.initialStore();
         },
         (error) => {
@@ -113,7 +111,7 @@ export default class App extends Component {
             <div className="container-fluid">
               <header>
                 <div className="row mt-2 justify-content-between">
-                  <div className="col-2">
+                  <div className="col-lg-2 col-sm-5">
                     <Barcode />
                   </div>
                   <div className="col-2">
@@ -123,7 +121,7 @@ export default class App extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-5">
+                  <div className="col-lg-5 col-sm-7">
                     {this.data !== null ? (
                       <Search
                         data={this.data}

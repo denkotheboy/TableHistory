@@ -1,6 +1,14 @@
+body {
+  padding-top: 5px;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
+}
+
+.container-fluid {
+  min-width: 760px;
 }
 
 .table-container {

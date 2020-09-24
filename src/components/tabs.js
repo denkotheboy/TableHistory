@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import 'antd/dist/antd.css';
+import { Pagination } from "antd";
 import Table from "./table";
 
 class Tabs extends Component {
@@ -17,56 +19,14 @@ class Tabs extends Component {
     this.listOfFoundEntries = [];
   }
 
-  nextPage = (tab) => {
-    this.getTheNumberOfPages(tab);
-    if (this.state.page < this.numberOfPages) {
-      this.setState({
-        page: this.state.page + 1
-      });
-      this.needToUpdate = true;
-      console.log("Page: " + this.state.page);
-    }
-  };
-
-  previousPage = (tab) => {
-    this.getTheNumberOfPages(tab);
-    if (this.state.page > 0) {
-      this.setState({
-        page: this.state.page - 1
-      });
-      this.needToUpdate = true;
-      console.log("Page: " + this.state.page);
-    }
-  };
-
-  goToPage = (number, tab) => {
-    this.getTheNumberOfPages(tab);
-    if (number >= 0 && number <= this.numberOfPages) {
+  goToPage = (page) => {
+    if (page >= 0 && page <= this.numberOfPages) {
       this.needToUpdate = true;
       this.setState({
-        page: number
+        page: page
       });
-      console.log("Page: " + number);
+      console.log("Page: " + page);
     }
-  };
-
-  drawingNumbering = (tab) => {
-    this.getTheNumberOfPages(tab);
-    let content = [];
-    //let skip = 10;
-    for (let i = 1; i <= this.numberOfPages; i++) {
-      content.push(
-        <li
-          className={this.state.page === i ? "page-item active" : "page-item"}
-          key={i}
-        >
-          <span onClick={() => this.goToPage(i, tab)} className="page-link ">
-            {i}
-          </span>
-        </li>
-      );
-    }
-    return content;
   };
 
   getTheNumberOfPages = (tab) => {
@@ -118,6 +78,7 @@ class Tabs extends Component {
               this.state.activeTab === tab ||
               window.location.pathname === "/" + tab
             ) {
+              this.getTheNumberOfPages(tab);
               return (
                 <div key={tab}>
                   <div className="row table-container">
@@ -132,72 +93,8 @@ class Tabs extends Component {
                   </div>
                   <div className="row justify-content-center">
                     {this.props.data[tab].length > 0 ? (
-                      <nav
-                        aria-label="Page navigation"
-                        id="page-switching-menu"
-                        className="mt-1"
-                      >
-                        <ul className="pagination pagination-sm justify-content-center">
-                          <li
-                            className={
-                              this.state.page === 1
-                                ? "page-item disabled"
-                                : "page-item"
-                            }
-                          >
-                            <span
-                              className="page-link"
-                              onClick={() => this.goToPage(1, tab)}
-                            >
-                              Первая
-                            </span>
-                          </li>
-                          <li
-                            className={
-                              this.state.page === 1
-                                ? "page-item disabled"
-                                : "page-item"
-                            }
-                          >
-                            <span
-                              className="page-link"
-                              onClick={() => this.previousPage(tab)}
-                            >
-                              Предыдущая
-                            </span>
-                          </li>
-                          {this.drawingNumbering(tab)}
-                          <li
-                            className={
-                              this.state.page === this.numberOfPages
-                                ? "page-item disabled"
-                                : "page-item"
-                            }
-                          >
-                            <span
-                              className="page-link"
-                              onClick={() => this.nextPage(tab)}
-                            >
-                              Следующая
-                            </span>
-                          </li>
-                          <li
-                            className={
-                              this.state.page === this.numberOfPages
-                                ? "page-item disabled"
-                                : "page-item"
-                            }
-                          >
-                            <span
-                              className="page-link"
-                              onClick={() =>
-                                this.goToPage(this.numberOfPages, tab)
-                              }
-                            >
-                              Последняя ({this.numberOfPages})
-                            </span>
-                          </li>
-                        </ul>
+                      <nav aria-label="Page navigation" id="page-switching-menu">
+                        <Pagination defaultCurrent={this.state.page} total={this.props.data[tab].length} pageSize={this.perPage} onChange={this.goToPage} showSizeChanger={false}/>
                       </nav>
                     ) : null}
                   </div>
