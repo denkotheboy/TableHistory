@@ -1,7 +1,6 @@
 {
   "name": "history-table",
   "version": "1.0.0",
-  "homepage": "/home/",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
