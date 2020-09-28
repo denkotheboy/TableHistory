@@ -49,11 +49,7 @@ export default class App extends Component {
       this.loadHistory(this.barcode);
       this.loadHistoryInterval = setInterval(() => {
         this.loadHistory(this.barcode);
-      }, 15000);
-      this.loadCount();
-      this.loadCountInterval = setInterval(() => {
-        this.loadCount();
-      }, 15000);
+      }, 15000);  
     }
     this.setState({
       activeTab: store.getState().activeTab
@@ -101,6 +97,10 @@ export default class App extends Component {
   }
   componentDidMount() {
     this.store = store.subscribe(this.storeChange);
+    this.loadCount();
+    this.loadCountInterval = setInterval(() => {
+      this.loadCount();
+    }, 60000);
   }
 
   render() {
@@ -115,7 +115,7 @@ export default class App extends Component {
                     <Barcode />
                   </div>
                   <div className="col-2">
-                    {this.data !== null ? (
+                    {this.state.count !== 0 ? (
                       <Count count={this.state.count} />
                     ) : null}
                   </div>

@@ -9,8 +9,7 @@ export default class Count extends Component {
   render() {
     return (
       <>
-        <span>Count: </span>
-        <span>{this.props.count}</span>
+        <span><h3>Count: {this.props.count}</h3></span>
       </>
     );
   }
