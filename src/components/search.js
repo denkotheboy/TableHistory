@@ -5,6 +5,7 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = { select: "id", input: "" };
+    this.inputSearch = React.createRef();
   }
 
   onSubmit = (event) => {
@@ -28,6 +29,15 @@ class Search extends Component {
       select: event.target.value
     });
   };
+
+  clearInput = (event) => {
+    event.preventDefault();
+    this.props.search({});
+    this.setState({
+      input: ""
+    });
+    this.inputSearch.current.value = "";
+  }
 
   sortColumnsById = (tab) => {
     var newTabs = [];
@@ -74,6 +84,7 @@ class Search extends Component {
             {this.renderSelect(this.props.activeTab)}
           </select>
           <input
+            ref={this.inputSearch}
             type="text"
             className="form-control form-control-sm ml-2"
             placeholder="Search"
@@ -83,6 +94,9 @@ class Search extends Component {
           />
           <button type="submit" className="btn-sm btn-outline-dark ml-2">
             Search
+          </button>
+          <button onClick={this.clearInput} className="btn-sm btn-outline-dark ml-2">
+            Clear
           </button>
         </form>
       </>
