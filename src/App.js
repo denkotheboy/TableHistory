@@ -69,7 +69,7 @@ export default class App extends Component {
   };
 
   loadCount() {
-    fetch("https://run.mocky.io/v3/dbc19a1a-179c-45ad-9015-c7f11ceb0f5d")
+    fetch("http://10.171.0.113:8181/packershistory/api/v1/info")
       .then((res) => res.json())
       .then(
         (result) => {
@@ -82,7 +82,7 @@ export default class App extends Component {
   }
 
   loadHistory(barcode) {
-    fetch("https://run.mocky.io/v3/706fa843-7094-4091-b991-268bb8a245a9")
+    fetch("http://10.171.0.113:8181/packershistory/api/v1/history?invoice_code="+barcode)
       .then((res) => res.json())
       .then(
         (result) => {
