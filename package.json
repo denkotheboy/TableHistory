@@ -2,6 +2,7 @@
   "name": "history-table",
   "version": "1.0.0",
   "description": "",
+  "homepage": "./",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
