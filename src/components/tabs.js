@@ -41,6 +41,34 @@ class Tabs extends Component {
     }
   };
 
+  search = () => {
+    this.listOfFoundEntries = [];
+    if (
+      Object.keys(this.props.search).length !== 0 &&
+      this.props.search.input !== undefined
+    ) {
+      for (let [i, value] of Object.values(
+        this.props.data[this.props.tab]
+      ).entries()) {
+        if (this.props.search.select === "id") {
+          if (
+            String(value[this.props.search.select]) === this.props.search.input
+          ) {
+            this.listOfFoundEntries.push(i);
+          }
+        } else {
+          if (
+            String(value[this.props.search.select]).search(
+              this.props.search.input
+            ) !== -1
+          ) {
+            this.listOfFoundEntries.push(i);
+          }
+        }
+      }
+    }
+  };
+
   render() {
     if (this.props.data !== null) {
       return (
