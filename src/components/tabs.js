@@ -87,11 +87,10 @@ class Tabs extends Component {
                       }}
                       className={
                         this.state.activeTab === tab ||
-                        window.location.pathname === "/" + tab
+                        this.props.store.activeTab === tab
                           ? "nav-link active"
                           : "nav-link"
                       }
-                      to={tab}
                     >
                       {tab}
                     </Link>
@@ -104,7 +103,7 @@ class Tabs extends Component {
           {Object.keys(this.props.data).map((tab) => {
             if (
               this.state.activeTab === tab ||
-              window.location.pathname === "/" + tab
+              this.props.store.activeTab === tab
             ) {
               this.getTheNumberOfPages(tab);
               return (
