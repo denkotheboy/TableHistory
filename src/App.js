@@ -65,7 +65,7 @@ export default class App extends Component {
   };
 
   loadCount() {
-    fetch("http://10.171.0.113:8181/packershistory/api/v1/info")
+    fetch("./packershistory/api/v1/info")
       .then((res) => res.json())
       .then(
         (result) => {
@@ -78,7 +78,7 @@ export default class App extends Component {
   }
 
   loadHistory(barcode) {
-    fetch("http://10.171.0.113:8181/packershistory/api/v1/history?invoice_code="+barcode)
+    fetch("./packershistory/api/v1/history?invoice_code="+barcode)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -111,7 +111,7 @@ export default class App extends Component {
             <div className="container-fluid">
               <header>
                 <div className="row mt-2 justify-content-between">
-                  <div className="col-lg-4 col-sm-8">
+                  <div className="col-lg-4 col-sm-5 col-xl-2">
                     <Barcode />
                   </div>
                   <div className="col-2">
