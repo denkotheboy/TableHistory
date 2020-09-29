@@ -39,16 +39,17 @@ class Tabs extends Component {
         Object.keys(this.props.data[tab]).length / this.perPage
       );
     }
+    
   };
 
-  search = () => {
+  search = (tab) => {
     this.listOfFoundEntries = [];
     if (
       Object.keys(this.props.search).length !== 0 &&
       this.props.search.input !== undefined
     ) {
       for (let [i, value] of Object.values(
-        this.props.data[this.props.tab]
+        this.props.data[tab]
       ).entries()) {
         if (this.props.search.select === "id") {
           if (
@@ -91,6 +92,7 @@ class Tabs extends Component {
                           ? "nav-link active"
                           : "nav-link"
                       }
+                      to=""
                     >
                       {tab}
                     </Link>
@@ -105,6 +107,7 @@ class Tabs extends Component {
               this.state.activeTab === tab ||
               this.props.store.activeTab === tab
             ) {
+              this.search(tab);
               this.getTheNumberOfPages(tab);
               return (
                 <div key={tab}>
@@ -113,6 +116,7 @@ class Tabs extends Component {
                       search={this.props.search}
                       key={tab}
                       data={this.props.data}
+                      dataSearch={this.listOfFoundEntries}
                       tab={tab}
                       page={this.state.page}
                       perPage={this.perPage}

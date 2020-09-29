@@ -12,7 +12,6 @@ class Table extends Component {
     this.to = 1;
     this.form = 0;
     this.scrollRef = React.createRef();
-    this.listOfFoundEntries = [];
   }
 
   expectNewToAndFrom = () => {
@@ -72,34 +71,6 @@ class Table extends Component {
     } catch (e) {}
   }
 
-  search = () => {
-    this.listOfFoundEntries = [];
-    if (
-      Object.keys(this.props.search).length !== 0 &&
-      this.props.search.input !== undefined
-    ) {
-      for (let [i, value] of Object.values(
-        this.props.data[this.props.tab]
-      ).entries()) {
-        if (this.props.search.select === "id") {
-          if (
-            String(value[this.props.search.select]) === this.props.search.input
-          ) {
-            this.listOfFoundEntries.push(i);
-          }
-        } else {
-          if (
-            String(value[this.props.search.select]).search(
-              this.props.search.input
-            ) !== -1
-          ) {
-            this.listOfFoundEntries.push(i);
-          }
-        }
-      }
-    }
-  };
-
   drawingColumns = () => {
     let content = [];
     this.sortColumnsById(
@@ -116,9 +87,8 @@ class Table extends Component {
 
   drawingFields = () => {
     let content = [];
-    this.search();
     Object.keys(this.props.data[this.props.tab]).forEach((line, id) => {
-      if (this.listOfFoundEntries.length === 0) {
+      if (this.props.dataSearch.length === 0) {
         if (id < this.to && id >= this.from) {
           content.push(
             <tr key={id}>
@@ -133,8 +103,8 @@ class Table extends Component {
           content.push(null);
         }
       } else {
-        this.listOfFoundEntries.forEach((item) => {
-          if (Number(id) === Number(item)) {
+        this.props.dataSearch.forEach((item) => {
+          if (Number(id) === Number(item) && id < this.to && id >= this.from) {
             content.push(
               <tr key={id}>
                 {this.sortFieldById(this.props.data[this.props.tab][line]).map(

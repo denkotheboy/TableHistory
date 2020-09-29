@@ -110,18 +110,18 @@ export default class App extends Component {
           <div className="App">
             <div className="container-fluid">
               <header>
-                <div className="row mt-2 justify-content-between">
-                  <div className="col-lg-2 col-sm-5">
+                <div className="row mt-2 justify-content-between border">
+                  <div className="col-lg-4 col-sm-8 border">
                     <Barcode />
                   </div>
-                  <div className="col-2">
+                  <div className="col-2 border">
                     {this.state.count !== 0 ? (
                       <Count count={this.state.count} />
                     ) : null}
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-lg-5 col-sm-7">
+                <div className="row border">
+                  <div className="col-lg-7 col-sm-8 border">
                     {this.data !== null ? (
                       <Search
                         data={this.data}
