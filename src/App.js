@@ -65,7 +65,7 @@ export default class App extends Component {
   };
 
   loadCount() {
-    fetch("./packershistory/api/v1/info")
+    fetch("./info")
       .then((res) => res.json())
       .then(
         (result) => {
@@ -78,7 +78,7 @@ export default class App extends Component {
   }
 
   loadHistory(barcode) {
-    fetch("./packershistory/api/v1/history?invoice_code="+barcode)
+    fetch("./?invoice_code="+barcode)
       .then((res) => res.json())
       .then(
         (result) => {
