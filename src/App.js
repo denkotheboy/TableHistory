@@ -78,7 +78,7 @@ export default class App extends Component {
   }
 
   loadHistory(barcode) {
-    fetch("./?invoice_code="+barcode)
+    fetch("./history?invoice_code="+barcode)
       .then((res) => res.json())
       .then(
         (result) => {
