@@ -25,7 +25,7 @@ class Tabs extends Component {
       this.setState({
         page: page
       });
-      console.log("Page: " + page);
+      //console.log("Page: " + page);
     }
   };
 
